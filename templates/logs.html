@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Attacker Logs — OAuth Lab{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="rekap-head">
+    <h2 class="card-title" style="margin:0"><i class="fa-solid fa-bug"></i> Attacker Logs</h2>
+    <span class="pill pill-red">jejak exploit</span>
+  </div>
+  <div class="log-wrap">
+    <div class="log-row log-head"><span>waktu</span><span>skenario</span><span>detail</span></div>
+    {% for l in logs %}
+    <div class="log-row">
+      <span class="log-ts">{{ (l.ts|int % 100000000) }}</span>
+      <span><b class="sc-{{ l.scenario }}">{{ l.scenario }}</b></span>
+      <span class="log-detail">{{ l.detail }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="dim">Terbaru di atas. Waktu adalah detik UNIX (simulasi).</p>
+</div>
+{% endblock %}

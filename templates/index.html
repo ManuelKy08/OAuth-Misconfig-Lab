@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card hero">
+  <div class="hero-box">
+    <div class="hero-title">OAuth Misconfiguration Lab</div>
+    <div class="hero-sub">4 skenario yang paling sering ditemukan di program <b style="color:var(--purple)">Bug Bounty</b> (BBP) pada integrasi OAuth (Sign in with Google/GitHub/Office 365).</div>
+    <div class="hero-meta">
+      <span class="pill pill-orange">Provider</span> <span class="pill pill-blue">Client App</span>
+      <span class="pill pill-red">Server Penyerang /evil/*</span>
+      <span class="pill pill-green">Flag: only di akun <b>victim@corp.test</b></span>
+    </div>
+    <div class="session-row">
+      <span>Identity provider saat ini: <b class="cyan">{{ provider or '— belum login —' }}</b></span>
+      <span>Sesi client app: <b class="green">{{ client_user or '— logout —' }}</b></span>
+    </div>
+  </div>
+</div>
+
+{% for s in ['s1','s2','s3','s4'] %}
+{% set m = modes[s] %}
+<div class="card sc-card" id="sc-{{ s }}">
+  <div class="sc-head">
+    <div class="sc-badge s{{ s }}">{{ loop.index }}</div>
+    <div class="sc-info">
+      <div class="sc-title">{{ {'s1':'1️⃣ Missing state → OAuth Login CSRF','s2':'2️⃣ redirect_uri validation cacat → token bocor','s3':'3️⃣ Account linking by email tanpa email_verified → ATO','s4':'4️⃣ No PKCE + authorization code reusable → replay ATO'}[s] }}</div>
+      <div class="sc-desc">{{ {'s1':'Client tidak mengirim & memverifikasi parameter state. Attacker membangun link login, korban mengkliknya → sesi korban terkatrol ke akun attacker (login CSRF).','s2':'Provider hanya mengecek host redirect_uri, path dibebaskan. Attacker memakai redirect_uri menuju server penyerang → authorization code & token bocor.','s3':'Client menautkan akun hanya dari klaim email tanpa memverifikasi email_verified → attacker mendaftar akun dgn email victim & login → masuk ke akun victim.','s4':'Tidak ada PKCE dan authorization code bisa ditukar berkali-kali. Attacker mengintersepsi code → replay → terbit token victim.'}[s] }}</div>
+    </div>
+    <button class="toggle {{ 'vuln' if m else 'fixed' }}" data-sc="{{ s }}">
+      <i class="fa-solid {{ 'fa-bomb' if m else 'fa-shield' }}"></i> {{ 'RENTAN' if m else 'FIXED' }}
+    </button>
+  </div>
+  <div class="sc-body">
+    <div class="poc-actions">
+      <button class="btn-run" data-poc="{{ s }}"><i class="fa-solid fa-radiation"></i> Jalankan Exploit</button>
+      {% if s == 's2' %}
+      <a class="btn-link" href="/s2/login"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Flow Nyata (browser ke /evil)</a>
+      {% endif %}
+    </div>
+    <pre class="poc-out" id="out-{{ s }}"><span class="dim">▶ klik "Jalankan Exploit" — jejak akan tercatat di Attacker Logs</span></pre>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

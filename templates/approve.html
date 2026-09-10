@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Approve — OAuth Lab{% endblock %}
+{% block content %}
+<div class="card">
+  <h2 class="card-title"><i class="fa-solid fa-user-shield"></i> Halaman Persetujuan OAuth</h2>
+  {% if error %}
+    <div class="err-box"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</div>
+  {% endif %}
+  <p>Client <b class="cyan">oauthlab-client</b> meminta akses:</p>
+  <ul class="scope-list">
+    <li><i class="fa-solid fa-circle-check"></i> profil (nama, email)</li>
+    <li><i class="fa-solid fa-circle-check"></i> email</li>
+  </ul>
+  <p class="dim">redirect_uri: <code>{{ uri }}</code></p>
+  <form method="post" action="/oauth/approve">
+    <input type="hidden" name="redirect_uri" value="{{ uri }}">
+    <input type="hidden" name="state" value="{{ state }}">
+    <input type="hidden" name="challenge" value="{{ code_challenge }}">
+    <button class="btn-ok"><i class="fa-solid fa-check"></i> Setujui &amp; Lanjutkan</button>
+  </form>
+  <p class="dim">Log in sebagai <b>{{ provider or '??' }}</b> dulu di halaman <a href="/provider">Provider Identity</a> kalau perlu.</p>
+</div>
+{% endblock %}

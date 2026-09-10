@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Provider Identity — OAuth Lab{% endblock %}
+{% block content %}
+<div class="card">
+  <h2 class="card-title"><i class="fa-solid fa-user-secret"></i> Pilih Identitas di OAuth Provider</h2>
+  <p class="dim">Simulasikan akun-akun yang terdaftar di OAuth provider (mis. Google). Authorize selalu memakai identitas ini.</p>
+  <div class="id-grid">
+    <form method="post" action="/oauth/login">
+      <input type="hidden" name="identity" value="victim">
+      <button class="id-card">
+        <div class="id-emoji">👨‍💼</div>
+        <div><b>Victim</b><br><small>victim@corp.test · verified · punya FLAG</small></div>
+        <div class="id-tag">Login</div>
+      </button>
+    </form>
+    <form method="post" action="/oauth/login">
+      <input type="hidden" name="identity" value="attacker">
+      <button class="id-card">
+        <div class="id-emoji">🦹</div>
+        <div><b>Attacker</b><br><small>attacker@evil.com · verified</small></div>
+        <div class="id-tag">Login</div>
+      </button>
+    </form>
+    <form method="post" action="/oauth/login">
+      <input type="hidden" name="identity" value="evilclone">
+      <button class="id-card">
+        <div class="id-emoji">👾</div>
+        <div><b>EvilClone</b><br><small>email victim@corp.test · <span class="red">unverified</span></small></div>
+        <div class="id-tag">Login</div>
+      </button>
+    </form>
+  </div>
+  <div class="session-row">
+    <span>Identity aktif: <b class="cyan">{{ current or '— belum login —' }}</b></span>
+  </div>
+</div>
+<div class="card">
+  <h2 class="card-title"><i class="fa-solid fa-compass"></i> Alur di lab ini</h2>
+  <ol class="steps">
+    <li><b>Provider</b> (server OAuth) = endpoint <code>/oauth/authorize</code>, <code>/oauth/token</code>, <code>/oauth/me</code>.</li>
+    <li><b>Client app</b> = halaman dashboard + <code>/cb</code> (callback tempat sesi dangkal dibuat).</li>
+    <li><b>Server penyerang</b> = path <code>/evil/s2_capture</code> yang "menangkap" code/token.</li>
+    <li>Jalankan exploit di tiap kartu Dashboard → hasilnya nongol di Attacker Logs.</li>
+  </ol>
+</div>
+{% endblock %}

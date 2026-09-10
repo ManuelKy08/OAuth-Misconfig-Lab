@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Server Penyerang — OAuth Lab{% endblock %}
+{% block content %}
+<div class="card">
+  <h2 class="card-title" style="color:var(--red)"><i class="fa-solid fa-skull"></i> Server Penyerang (/evil/s2_capture)</h2>
+  <p class="dim">Barusan menuang dari browser korban karena redirect_uri validation cacat (s2).</p>
+  <div class="kill-box">
+    <div class="kill-row"><span>authorization code terkirim</span><code>{{ code }}</code></div>
+    {% if err %}
+      <div class="err-box">{{ err }}</div>
+    {% else %}
+      <div class="kill-row"><span>access_token tersa tiris</span><code>{{ token }}</code></div>
+      {% if claims %}
+      <div class="kill-row"><span>/oauth/me claims</span><code>{{ claims }}</code></div>
+      {% endif %}
+      {% if victim %}
+      <div class="kill-row flag"><span>Data victim terbaca</span><code class="flag">{{ victim['flag'] }}</code></div>
+      {% endif %}
+    {% endif %}
+  </div>
+  <a class="btn-ok" style="display:inline-block;margin-top:14px" href="/logs">Lihat Attacker Logs →</a>
+</div>
+{% endblock %}
